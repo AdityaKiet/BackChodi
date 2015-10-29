@@ -3,10 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "imposo.com.application"
-        minSdkVersion 8
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -17,9 +18,30 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res', 'src/main/res/layout', 'src/main/res/menu', 'src/main/res/drawable-hdpi', 'src/main/res/drawable-ldpi', 'src/main/res/drawable-mdpi', 'src/main/res/drawable-xhdpi', 'src/main/res/drawable-xxhdpi', 'src/main/res/values-11']
+        }
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:support-v4:23.0.0'
     compile 'com.android.support:appcompat-v7:23.0.1'
+    compile files('libs/org.apache.http.legacy.jar')
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    compile 'com.avast:android-styled-dialogs:2.2.0'
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.github.ganfra:material-spinner:1.1.0'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
+    compile('com.afollestad.material-dialogs:core:0.8.2.0@aar') {
+        transitive = true
+    }
+    compile files('libs/gcm.jar')
+}
+
+repositories {
+    maven { url "https://jitpack.io" }
 }

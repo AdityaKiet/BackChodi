@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center"
+    android:background="@color/white" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/etLoginPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
+            android:inputType="phone"
+            android:hint="Enter phone number"
+            app:met_iconLeft="@mipmap/ic_phone"
+            app:met_iconPadding="0dp"
+            app:met_minCharacters="10"
+            app:met_maxCharacters="10" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:alpha="0.5"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <com.gc.materialdesign.views.ButtonFloat
+            android:id="@+id/btnLogin"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/ColorPrimary"
+            materialdesign:animate="false"
+            materialdesign:iconDrawable="@mipmap/ic_next" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/btnConfirmOTP"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:id="@+id/txtLogoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:alpha="0.2"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:typeface="sans" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtLogoText"
+                android:layout_centerHorizontal="true"
+                android:alpha="0.2"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/tag_line"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>

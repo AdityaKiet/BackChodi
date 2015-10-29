@@ -1,3 +1,18 @@
 <resources>
+    <string name="otp_msg">A one time password will be sent to your mobile number.</string>
     <string name="app_name">Application</string>
+    <string name="reset_otp">Enter OTP</string>
+    <string name="tag_line">Gifts for your loved ones.</string>
+    <string name="confirm_otp_text">Please enter your OTP to activate your account.</string>
+    <string name="et_otp_confirm">Enter your One Time Password.</string>
+
+    <string-array name="occupations">
+        <item>Student</item>
+        <item>Corporate Employee</item>
+        <item>Govt. Employee</item>
+        <item>Family Business</item>
+        <item>Entrepreneur</item>
+        <item>Retired senior citizen</item>
+        <item>Others</item>
+    </string-array>
 </resources>
