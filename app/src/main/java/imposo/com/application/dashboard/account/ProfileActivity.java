@@ -10,11 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.gc.materialdesign.views.ButtonRectangle;
 import com.google.gson.Gson;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -36,7 +36,7 @@ public class ProfileActivity extends ActionBarActivity{
     private Toolbar toolbar;
     private MaterialEditText etName, etPhone, etEmail;
     private ToggleButton toggleGender;
-    private ButtonRectangle btnAddProfile;
+    private Button btnAddProfile;
     private SessionDTO sessionDTO;
     private MaterialSpinner spinner;
     private int pos = -1;
@@ -51,8 +51,10 @@ public class ProfileActivity extends ActionBarActivity{
     }
 
     private void populate(){
+
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.showOverflowMenu();
         toolbar.setNavigationIcon(R.mipmap.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,14 +62,17 @@ public class ProfileActivity extends ActionBarActivity{
                 onBackPressed();
             }
         });
-        getSupportActionBar().setTitle("Create Profile");
+
+
+
         SharedPreferences sharedPreferences  = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         sessionDTO = new Gson().fromJson(sharedPreferences.getString("session", null),SessionDTO.class);
+
         etName = (MaterialEditText) findViewById(R.id.etName);
         etPhone = (MaterialEditText)findViewById(R.id.etPhone);
         etEmail = (MaterialEditText) findViewById(R.id.etEmail);
         toggleGender = (ToggleButton) findViewById(R.id.toggleGender);
-        btnAddProfile = (ButtonRectangle) findViewById(R.id.btnAddProfile);
+        btnAddProfile = (Button) findViewById(R.id.btnAddProfile);
         txtDOB = (TextView) findViewById(R.id.txtDOB);
         etName.setText(sessionDTO.getName());
         etPhone.setText(sessionDTO.getPhoneNumber());

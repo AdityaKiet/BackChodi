@@ -65,14 +65,13 @@
                 android:textSize="17sp"
                 android:textStyle="normal" />
 
-            <com.gc.materialdesign.views.ButtonFloat
+            <Button
                 android:id="@+id/btnConfirmOTP"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/ColorPrimary"
-                materialdesign:animate="false"
-                materialdesign:iconDrawable="@mipmap/ic_next" />
+                 />
 
             <TextView
                 android:id="@+id/txtCofirmOTPDisplayMessage"

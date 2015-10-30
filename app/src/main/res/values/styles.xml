@@ -22,4 +22,15 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="myCustomMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+    </style>
+
+    <style name="ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+       <!-- <item name="android:textColor">@color/black</item>-->
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/black</item>
+    </style>
+
+
 </resources>

@@ -6,12 +6,12 @@ import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.gc.materialdesign.views.ButtonFloat;
 import com.google.gson.Gson;
 
 import imposo.com.application.R;
@@ -27,7 +27,7 @@ import imposo.com.application.ui.MessageDialog;
 public class OTPActivity extends ActionBarActivity implements View.OnClickListener{
     private RegisterDTO registerDTO;
     private EditText etOTP;
-    private ButtonFloat btnConfirmOTP;
+    private Button btnConfirmOTP;
     private Toolbar toolbar;
     private TextView tvResendOTP, tvCounter;
     private CountDownTimer countDownTimer;
@@ -65,7 +65,7 @@ public class OTPActivity extends ActionBarActivity implements View.OnClickListen
         });
         getSupportActionBar().setTitle("OTP");
         etOTP = (EditText)findViewById(R.id.etOTP);
-        btnConfirmOTP = (ButtonFloat)findViewById(R.id.btnConfirmOTP);
+        btnConfirmOTP = (Button)findViewById(R.id.btnConfirmOTP);
         tvResendOTP = (TextView)findViewById(R.id.txtResendOTP);
         tvCounter = (TextView)findViewById(R.id.txttimeCounterOTP);
         btnConfirmOTP.setOnClickListener(this);

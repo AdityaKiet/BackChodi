@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import imposo.com.application.R;
-import imposo.com.application.dashboard.account.ProfileActivity;
+import imposo.com.application.dashboard.account.ProfileUpdateActivity;
 import imposo.com.application.newfeed.AddNewFeed;
 
 /**
@@ -52,7 +52,7 @@ public class MyFeedFragment extends Fragment{
             Intent intent = new Intent(getActivity(), AddNewFeed.class);
             startActivity(intent);
         }else if(id == R.id.action_profile){
-            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            Intent intent = new Intent(getActivity(), ProfileUpdateActivity.class);
             startActivity(intent);
         }
         return true;

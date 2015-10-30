@@ -43,14 +43,13 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
 
-        <com.gc.materialdesign.views.ButtonFloat
+        <Button
             android:id="@+id/btnLogin"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/ColorPrimary"
-            materialdesign:animate="false"
-            materialdesign:iconDrawable="@mipmap/ic_next" />
+          />
 
         <RelativeLayout
             android:layout_width="fill_parent"

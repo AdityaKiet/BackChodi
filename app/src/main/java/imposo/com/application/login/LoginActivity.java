@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 
-import com.gc.materialdesign.views.ButtonFloat;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Random;
@@ -20,7 +20,7 @@ import imposo.com.application.util.NetworkCheck;
  * Created by adityaagrawal on 25/10/15.
  */
 public class LoginActivity extends ActionBarActivity implements View.OnClickListener{
-    private ButtonFloat btnLogin;
+    private Button btnLogin;
     private MaterialEditText etPhoneNumber;
     private Toolbar toolbar;
 
@@ -32,7 +32,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     }
 
     private void populate(){
-        btnLogin = (ButtonFloat) findViewById(R.id.btnLogin);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
         etPhoneNumber = (MaterialEditText) findViewById(R.id.etLoginPhone);
         btnLogin.setOnClickListener(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);

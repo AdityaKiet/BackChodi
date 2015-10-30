@@ -22,7 +22,6 @@
             android:layout_marginTop="15dp"
             android:orientation="vertical">
 
-
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
@@ -38,12 +37,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:hint="Phone"
                 android:clickable="false"
                 android:cursorVisible="false"
                 android:editable="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
+                android:hint="Phone"
                 android:inputType="phone"
                 app:met_floatingLabel="highlight"
                 app:met_iconLeft="@mipmap/ic_call_dark"
@@ -84,8 +83,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="5dp"
-                android:gravity="center_vertical"
                 android:background="@drawable/abc_edit_text_holo_light"
+                android:gravity="center_vertical"
                 android:inputType="textCapWords"
                 android:paddingLeft="15dp"
                 android:paddingRight="5dp"
@@ -98,8 +97,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
-                android:background="@drawable/abc_edit_text_holo_light"
                 android:layout_marginTop="5dp"
+                android:background="@drawable/abc_edit_text_holo_light"
                 android:checked="false"
                 android:gravity="left|center_vertical"
                 android:paddingLeft="15dp"
@@ -111,7 +110,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <com.gc.materialdesign.views.ButtonRectangle
+            <Button
                 android:id="@+id/btnAddProfile"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -123,7 +122,7 @@
                 android:background="@color/ColorPrimary"
                 android:text="Upadte" />
 
-
         </LinearLayout>
+
     </ScrollView>
 </LinearLayout>
