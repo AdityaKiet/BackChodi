@@ -80,6 +80,10 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:name=".dashboard.account.ProfilePicActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".newfeed.AddNewFeed"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"></activity>

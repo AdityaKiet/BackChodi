@@ -22,6 +22,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
     public SimpleRecyclerAdapter(List<ProfileListDTO> versionModels) {
         this.versionModels = versionModels;
 
+
     }
 
     @Override

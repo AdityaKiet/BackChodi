@@ -11,12 +11,4 @@
         app:showAsAction="ifRoom">
     </item>
 
-    <item
-        android:id="@+id/action_add_question"
-        android:icon="@mipmap/ic_add"
-        android:orderInCategory="200"
-        android:title="Reset"
-        app:showAsAction="ifRoom">
-    </item>
-
 </menu>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <ImageView
+            android:src="@mipmap/logo"
+            android:id="@+id/imgSelectedImage"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp" />
+
+        <TextView
+            android:id="@+id/txtOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:text="NAMEEEEEEE"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black"
+            android:textStyle="normal"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imgSelectedImage"
+            android:layout_toEndOf="@+id/imgSelectedImage" />
+
+        <ImageButton
+            android:id="@+id/btnDeleteOption"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="8dp"
+            android:background="@android:color/transparent"
+            android:src="@mipmap/ic_cross" />
+    </RelativeLayout>
+
+</LinearLayout>
