@@ -89,7 +89,22 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:name=".allfeeds.PostDiscActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".allfeeds.FullImageActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".newfeed.FeedShareWithActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".allfeeds.comment.PostCommentActivity"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"></activity>
 

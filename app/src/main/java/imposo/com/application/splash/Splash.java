@@ -12,6 +12,7 @@ import com.crashlytics.android.Crashlytics;
 
 import imposo.com.application.R;
 import imposo.com.application.dashboard.DashboardActivity;
+import imposo.com.application.global.GlobalData;
 import imposo.com.application.login.LoginActivity;
 import io.fabric.sdk.android.Fabric;
 
@@ -26,6 +27,7 @@ public class Splash extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         populate();
+        GlobalData.getInstance().getRequestQueue().getCache().clear();
         if(sharedPreferences.getString("session", null) != null ){
             Intent intent = new Intent(this, DashboardActivity.class);
             startActivity(intent);

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="@dimen/feed_item_margin"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="5dp">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/feed_item_padding_left_right"
+                    android:paddingRight="@dimen/feed_item_padding_left_right">
+
+                    <com.android.volley.toolbox.NetworkImageView
+                        android:id="@+id/profilePic"
+                        android:layout_width="@dimen/feed_item_profile_pic"
+                        android:layout_height="@dimen/feed_item_profile_pic"
+                        android:scaleType="fitCenter"></com.android.volley.toolbox.NetworkImageView>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="@dimen/feed_item_profile_info_padd">
+
+                        <TextView
+                            android:id="@+id/name"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/feed_item_profile_name"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/timestamp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/timestamp"
+                            android:textSize="@dimen/feed_item_timestamp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtUrl"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/feed_item_status_pad_left_right"
+                    android:paddingRight="@dimen/feed_item_status_pad_left_right"
+                    android:paddingTop="@dimen/feed_item_status_pad_top"
+                    android:text="Status"
+                    android:textColor="@color/black"
+                    android:textColorLink="#2f6699"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtStatusMsg"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="@dimen/feed_item_status_pad_left_right"
+                    android:paddingRight="@dimen/feed_item_status_pad_left_right"
+                    android:paddingTop="5dp"
+                    android:text="Status"
+                    android:textColor="@color/black"
+                    android:textColorLink="#2f6699" />
+
+
+                <LinearLayout
+                    android:id="@+id/llFeedImages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:visibility="visible"></LinearLayout>
+
+                <View
+                    android:id="@+id/viewLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_below="@+id/txtNumberOfComments"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@android:color/darker_gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/viewLine"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/txtLike"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.33"
+                        android:alpha="0.5"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:text="Like"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtComment"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.33"
+                        android:alpha="0.5"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:text="Comment"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/txtShare"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.33"
+                        android:alpha="0.5"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:text="Share"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

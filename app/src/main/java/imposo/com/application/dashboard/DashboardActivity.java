@@ -17,7 +17,7 @@ public class DashboardActivity extends ActionBarActivity {
     private ViewPager pager;
     private ViewPagerAdapter adapter;
     private SlidingTabLayout tabs;
-    private CharSequence Titles[]={"My Feeds","All Feeds", "My Answers"};
+    private CharSequence Titles[]={"All Feeds","My Feeds", "My Answers"};
     private int Numboftabs =3;
 
     @Override
@@ -38,6 +38,14 @@ public class DashboardActivity extends ActionBarActivity {
                 messageCustomDialogDTO.setButton("OK");
                 MessageDialog messageCustomDialog = new MessageDialog(messageCustomDialogDTO);
                 messageCustomDialog.show();
+            }else if(bundle.getInt("success") == 2){
+                MessageCustomDialogDTO messageCustomDialogDTO = new MessageCustomDialogDTO();
+                messageCustomDialogDTO.setTitle("Success");
+                messageCustomDialogDTO.setMessage("Congratulations !!\nYour comment has been posted.");
+                messageCustomDialogDTO.setContext(this);
+                messageCustomDialogDTO.setButton("OK");
+                MessageDialog messageCustomDialog = new MessageDialog(messageCustomDialogDTO);
+                messageCustomDialog.show();
             }
         }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -46,6 +54,8 @@ public class DashboardActivity extends ActionBarActivity {
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
+        pager.setCurrentItem(1);
+        pager.setOffscreenPageLimit(3);
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
         tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {

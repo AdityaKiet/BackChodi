@@ -24,8 +24,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 			MyFeedFragment tab2 = new MyFeedFragment();
 			return tab2;
 		}else{
-			AllFeedsFragment tab1 = new AllFeedsFragment();
-			return tab1;
+			MyFeedFragment tab2 = new MyFeedFragment();
+			return tab2;
 		}
 	}
 

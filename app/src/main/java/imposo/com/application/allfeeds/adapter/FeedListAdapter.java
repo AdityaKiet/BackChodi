@@ -5,11 +5,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
-import android.provider.MediaStore.Images.Media;
-import android.text.Html;
-import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,33 +20,36 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.gson.Gson;
 
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import imposo.com.application.R;
-import imposo.com.application.allfeeds.data.FeedItem;
+import imposo.com.application.allfeeds.PostDiscActivity;
+import imposo.com.application.allfeeds.comment.PostCommentActivity;
+import imposo.com.application.allfeeds.data.FeedDTO;
+import imposo.com.application.allfeeds.like.LikeAsynTask;
+import imposo.com.application.allfeeds.like.UnLikeAsynTask;
 import imposo.com.application.allfeeds.volley.FeedImageView;
+import imposo.com.application.constants.NetworkConstants;
+import imposo.com.application.dashboard.AllFeedsFragment;
 import imposo.com.application.global.GlobalData;
+import imposo.com.application.util.NetworkCheck;
 
-public class FeedListAdapter extends BaseAdapter {  
+public class FeedListAdapter extends BaseAdapter implements NetworkConstants {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<FeedItem> feedItems;
+    private List<FeedDTO> feedItems;
     private ImageLoader imageLoader = GlobalData.getInstance().getImageLoader();
     private EditText etMessage;
 
-	public FeedListAdapter(Activity activity, List<FeedItem> feedItems) {
+	public FeedListAdapter(Activity activity) {
         this.activity = activity;
-        this.feedItems = feedItems;
-        feedItems =  new ArrayList<FeedItem>(new LinkedHashSet<FeedItem>(feedItems));
+        this.feedItems = AllFeedsFragment.feedItems;
     }
  
     @Override
@@ -81,35 +84,28 @@ public class FeedListAdapter extends BaseAdapter {
         NetworkImageView profilePic = (NetworkImageView) convertView.findViewById(R.id.profilePic);
         FeedImageView feedImageView = (FeedImageView) convertView.findViewById(R.id.feedImage1);
  
-        FeedItem item = feedItems.get(position);
-        name.setText(item.getName());
+        FeedDTO item = feedItems.get(position);
+        if(item.getIsAnonyomous() == 1)
+            name.setText("Anonymous");
+        else
+            name.setText(item.getPostCreaterName());
         
         try {
         	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			timestamp.setText(new SimpleDateFormat("dd MMM, yyyy").format(dateFormat.parse(item.getTimeStamp())));
+			timestamp.setText(new SimpleDateFormat("dd MMM, yyyy").format(dateFormat.parse(item.getPostTime())));
 		} catch (ParseException e) {
 			timestamp.setVisibility(View.GONE);
 		}
-
-        if (!TextUtils.isEmpty(item.getStatus())) {
-            statusMsg.setText(item.getStatus());
-            statusMsg.setVisibility(View.VISIBLE);
-        } else {
-            statusMsg.setVisibility(View.GONE);
-        }
-
-        if (!item.getUrl().equals("")) {
-            url.setText(Html.fromHtml("<a href=\"" + item.getUrl() + "\">" + item.getUrl() + "</a> "));
-            url.setMovementMethod(LinkMovementMethod.getInstance());
-            url.setVisibility(View.VISIBLE);
-        } else {
-            url.setVisibility(View.GONE);
-        }
+        if(item.getIsAnonyomous() == 1)
+            profilePic.setImageUrl(GET_IMAGE_NETWORK_IP + "anon.png", imageLoader);
+        else
+            profilePic.setImageUrl(GET_IMAGE_NETWORK_IP + item.getPostCreaterId() +".png", imageLoader);
+        statusMsg.setText(item.getPostText());
+        url.setText(item.getPostTitle());
+        Linkify.addLinks(statusMsg, Linkify.ALL);
  
-        profilePic.setImageUrl(item.getProfilePic(), imageLoader);
- 
-        if (!item.getImge().equals("")) {
-            feedImageView.setImageUrl(item.getImge(), imageLoader);
+        if (!(item.getImages().size() == 0)) {
+            feedImageView.setImageUrl(item.getImages().get(0).getImageLink(), imageLoader);
             feedImageView.setVisibility(View.VISIBLE);
             feedImageView.setResponseObserver(new FeedImageView.ResponseObserver() {
                         @Override
@@ -126,71 +122,111 @@ public class FeedListAdapter extends BaseAdapter {
         convertView.setOnClickListener(new OnClickListener() {
         	@Override
         	public void onClick(View v) {
-
+                Intent intent = new Intent(activity, PostDiscActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("gson", new Gson().toJson(feedItems.get(position)));
+                intent.putExtras(bundle);
+                activity.startActivity(intent);
         	}
         });
         
         TextView txtComment = (TextView) convertView.findViewById(R.id.txtComment);
         TextView txtShare = (TextView) convertView.findViewById(R.id.txtShare);
-        TextView txtMore = (TextView) convertView.findViewById(R.id.txtMore);
+        TextView txtLike = (TextView) convertView.findViewById(R.id.txtLike);
+        if(item.isLiked()){
+            txtLike.setText(item.getLikes() + " Unlike");
+            txtLike.setTextColor(Color.BLUE);
+        }
+        else {
+            txtLike.setText(item.getLikes() + " Like");
+            txtLike.setTextColor(Color.BLACK);
+        }
         txtComment.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("gson", new Gson().toJson(feedItems.get(position)));
+                Intent intent = new Intent(activity, PostCommentActivity.class);
+                intent.putExtras(bundle);
+               activity.startActivity(intent);
 			}
 		});
-        
-        txtMore.setOnClickListener(new OnClickListener() {
+
+        txtLike.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                if(NetworkCheck.isNetworkAvailable(activity)) {
+                    if (feedItems.get(position).isLiked()) {
+                        FeedDTO feedDTO = feedItems.get(position);
+                        int likes = feedDTO.getLikes() - 1;
+                        UnLikeAsynTask likeAsynTask = new UnLikeAsynTask(activity, feedDTO, likes);
+                        likeAsynTask.execute();
+                        int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                        feedDTO.setLikes(likes);
+                        feedDTO.setLiked(false);
+                        AllFeedsFragment.feedItems.set(index, feedDTO);
+                        notifyDataSetChanged();
+                    } else {
+                        FeedDTO feedDTO = feedItems.get(position);
+                        int likes = feedDTO.getLikes() + 1;
+                        LikeAsynTask likeAsynTask = new LikeAsynTask(activity, feedDTO, likes);
+                        likeAsynTask.execute();
+                        int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                        feedDTO.setLikes(likes);
+                        feedDTO.setLiked(true);
+                        AllFeedsFragment.feedItems.set(index, feedDTO);
+                        notifyDataSetChanged();
+                    }
+                }else{
+
+                }
 
 			}
 		});
         
         txtShare.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				
-				if(feedItems.get(position).getImge().equals("")){
-					Intent share = new Intent(Intent.ACTION_SEND);
-            		share.setType("text/plain");
-            		share.putExtra(Intent.EXTRA_TEXT, feedItems.get(position).getStatus());
-            		activity.startActivity(Intent.createChooser(share, "Share Using"));
-				}else{
-				GlobalData.getInstance().getImageLoader().get(feedItems.get(position).getImge(), new ImageListener() {
-					
-					public void onErrorResponse(VolleyError arg0) {
-					}
-					
-					@Override
-					public void onResponse(ImageContainer response, boolean arg1) {
-						 Bitmap mBitmap = response.getBitmap();
-				            ContentValues image = new ContentValues();
-				                image.put(Media.MIME_TYPE, "image/jpg");
-				                Uri uri = activity.getContentResolver().insert(Media.EXTERNAL_CONTENT_URI, image);
-				                try {
-				                    OutputStream out = activity.getContentResolver().openOutputStream(uri);
-				                    boolean success = mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-				                    out.close();
-				                    if (!success) {
-				                    	Intent share = new Intent(Intent.ACTION_SEND);
-				                		share.setType("text/plain");
-				                		share.putExtra(Intent.EXTRA_TEXT, feedItems.get(position).getStatus());
-				                		activity.startActivity(Intent.createChooser(share, "Share Using"));
-				                    } else {
-				                    	Intent share = new Intent(Intent.ACTION_SEND);
-				                		share.setType("image/jpeg");
-				                		share.putExtra(Intent.EXTRA_STREAM, uri);
-				                		share.putExtra(Intent.EXTRA_TEXT, feedItems.get(position).getStatus());
-				                		activity.startActivity(Intent.createChooser(share, "Share Using"));
-				                    }
+                if(feedItems.get(position).getImages().size() == 0){
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("text/plain");
+                    share.putExtra(Intent.EXTRA_TEXT, feedItems.get(position).getPostTitle() + "\n" + feedItems.get(position).getPostText());
+                    activity.startActivity(Intent.createChooser(share, "Share Using"));
+                }else{
+                    GlobalData.getInstance().getImageLoader().get(feedItems.get(position).getImages().get(0).getImageLink(), new ImageLoader.ImageListener() {
 
-				                } catch (Exception e) {
-				                    e.printStackTrace();
-				                }
-				            }						
-					
-				});
-			}
-		}
+                        public void onErrorResponse(VolleyError arg0) {
+                        }
+
+                        @Override
+                        public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
+                            Bitmap mBitmap = response.getBitmap();
+                            ContentValues image = new ContentValues();
+                            image.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
+                            Uri uri = activity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, image);
+                            try {
+                                OutputStream out = activity.getContentResolver().openOutputStream(uri);
+                                boolean success = mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                                out.close();
+                                if (!success) {
+                                    Intent share = new Intent(Intent.ACTION_SEND);
+                                    share.setType("text/plain");
+                                    share.putExtra(Intent.EXTRA_TEXT, feedItems.get(position).getPostTitle() + "\n" + feedItems.get(position).getPostText());
+                                    activity.startActivity(Intent.createChooser(share, "Share Using"));
+                                } else {
+                                    Intent share = new Intent(Intent.ACTION_SEND);
+                                    share.setType("image/jpeg");
+                                    share.putExtra(Intent.EXTRA_STREAM, uri);
+                                    share.putExtra(Intent.EXTRA_TEXT, feedItems.get(position).getPostTitle() + "\n" + feedItems.get(position).getPostText());
+                                    activity.startActivity(Intent.createChooser(share, "Share Using"));
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    });
+                }
+            }
 	});
         return convertView;
     }

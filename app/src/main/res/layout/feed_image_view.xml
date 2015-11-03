@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<imposo.com.application.allfeeds.volley.FeedImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/feedImage1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingTop="10dp"
+    android:scaleType="fitXY"
+    android:visibility="visible">
+
+</imposo.com.application.allfeeds.volley.FeedImageView>
+

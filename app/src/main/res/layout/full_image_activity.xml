@@ -17,6 +17,7 @@
 
     <imposo.com.application.ui.ZoomableImageView
         android:id="@+id/imgProfilePicFullScreen"
+        android:layout_below="@+id/toolbar"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 

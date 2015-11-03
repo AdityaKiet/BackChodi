@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/feed_bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -14,27 +14,26 @@
         android:background="@drawable/bg_parent_rounded_corner"
         android:orientation="vertical"
         android:paddingBottom="5dp"
-        android:paddingTop="@dimen/feed_item_padding_top_bottom" >
+        android:paddingTop="@dimen/feed_item_padding_top_bottom">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/feed_item_padding_left_right"
-            android:paddingRight="@dimen/feed_item_padding_left_right" >
+            android:paddingRight="@dimen/feed_item_padding_left_right">
 
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/profilePic"
                 android:layout_width="@dimen/feed_item_profile_pic"
                 android:layout_height="@dimen/feed_item_profile_pic"
-                android:scaleType="fitCenter" >
-            </com.android.volley.toolbox.NetworkImageView>
+                android:scaleType="fitCenter"></com.android.volley.toolbox.NetworkImageView>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/feed_item_profile_info_padd" >
+                android:paddingLeft="@dimen/feed_item_profile_info_padd">
 
                 <TextView
                     android:id="@+id/name"
@@ -54,24 +53,29 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/txtUrl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/feed_item_status_pad_left_right"
+            android:paddingRight="@dimen/feed_item_status_pad_left_right"
+            android:paddingTop="@dimen/feed_item_status_pad_top"
+            android:text="Status"
+            android:textColor="@color/black"
+            android:textColorLink="#2f6699"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/txtStatusMsg"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
             android:paddingLeft="@dimen/feed_item_status_pad_left_right"
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
-            android:paddingTop="@dimen/feed_item_status_pad_top"
-            android:textColor="@color/black" />
+            android:paddingTop="5dp"
+            android:text="Status"
+            android:textColor="@color/black"
+            android:textColorLink="#2f6699" />
 
-        <TextView
-            android:id="@+id/txtUrl"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:linksClickable="true"
-            android:paddingBottom="10dp"
-            android:paddingLeft="@dimen/feed_item_status_pad_left_right"
-            android:paddingRight="@dimen/feed_item_status_pad_left_right"
-            android:textColorLink="@color/link" />
 
         <imposo.com.application.allfeeds.volley.FeedImageView
             android:id="@+id/feedImage1"
@@ -97,7 +101,21 @@
             android:layout_below="@+id/viewLine"
             android:layout_marginTop="5dp"
             android:orientation="horizontal"
-            android:weightSum="1" >
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/txtLike"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.33"
+                android:alpha="0.5"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="Like"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtComment"
@@ -109,9 +127,10 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="Comment"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
+
 
             <TextView
                 android:id="@+id/txtShare"
@@ -123,21 +142,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="Share"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtMore"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.33"
-                android:alpha="0.5"
-                android:clickable="true"
-                android:gravity="center"
-                android:text="More"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
         </LinearLayout>
