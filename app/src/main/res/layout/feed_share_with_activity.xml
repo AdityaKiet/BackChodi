@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/txtAnonyomous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/btnDeleteOption"
+            android:gravity="center_vertical"
+            android:text="Anonyomous ?"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black"
+            android:textStyle="normal" />
+
+        <com.rey.material.widget.Switch
+            android:id="@+id/switchAnonyomous"
+            style="@style/Material.Widget.Switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:checked="false" />
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:text="If you select anonomyous you can share this post with one contact only. Your name will not be revealed in anonomyous question."
+            android:layout_width="wrap_content"
+            android:textColor="@color/black"
+            android:alpha="0.5"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtAnonyomous"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Contacts (Leave for public)"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/ColorPrimary" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/ColorPrimary" />
+
+    <ListView
+        android:id="@+id/listSelectContacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="3dp"
+        android:choiceMode="multipleChoice" />
+
+
+</LinearLayout>

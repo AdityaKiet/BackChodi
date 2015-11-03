@@ -44,11 +44,25 @@
                 android:minLines="5"
                 android:padding="10dp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Options"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/ColorPrimary" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/ColorPrimary" />
+
             <imposo.com.application.ui.NestedListView
                 android:id="@+id/listOptionsSelected"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="3dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -80,13 +94,28 @@
 
             </RelativeLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Images"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/ColorPrimary" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/ColorPrimary" />
+
             <imposo.com.application.ui.NestedListView
                 android:id="@+id/listImagesSelected"
-                android:layout_marginBottom="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
                 android:layout_marginTop="10dp" />
         </LinearLayout>
     </ScrollView>
+
 
 </LinearLayout>

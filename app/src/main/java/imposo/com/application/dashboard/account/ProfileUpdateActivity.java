@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -59,7 +58,6 @@ import imposo.com.application.dto.MessageCustomDialogDTO;
 import imposo.com.application.dto.ProfileListDTO;
 import imposo.com.application.dto.SessionDTO;
 import imposo.com.application.ui.MessageDialog;
-import imposo.com.application.util.RealPathUtil;
 
 /**
  * Created by adityaagrawal on 26/10/15.
@@ -296,30 +294,10 @@ public class ProfileUpdateActivity extends ActionBarActivity implements NetworkC
 
             filePath = data.getData();
             try {
+
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 512, 512, true);
-                String path = null;
-                if (Build.VERSION.SDK_INT < 11) {
-                    path = RealPathUtil.getRealPathFromURI_BelowAPI11(this, filePath);
-                } else if (Build.VERSION.SDK_INT < 19) {
-                    path = RealPathUtil.getRealPathFromURI_API11to18(this, filePath);
-                } else {
-                    path = RealPathUtil.getRealPathFromURI_API19(this, filePath);
-                }
-                /*Log.e("log" , "" + path);
-                File file = new File(path);
-                Log.e("log", " " + file.length());
-                if(file.length() / 1024 <= 1024){*/
-                    uploadImage(bitmap);
-               /* }else{
-                    MessageCustomDialogDTO messageCustomDialogDTO = new MessageCustomDialogDTO();
-                    messageCustomDialogDTO.setTitle("Image upload failed.");
-                    messageCustomDialogDTO.setMessage("Profile pic can't exceed 1 M.B. in size.");
-                    messageCustomDialogDTO.setContext(ProfileUpdateActivity.this);
-                    messageCustomDialogDTO.setButton("OK");
-                    MessageDialog messageCustomDialog = new MessageDialog(messageCustomDialogDTO);
-                    messageCustomDialog.show();
-                }*/
+                uploadImage(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -9,6 +9,12 @@
     <color name="primary_700">#303F9F</color>
     <color name="accent_500">#E91E63</color>
     <color name="accent_700">#C2185B</color>
+    <color name="list_selector">#C2E9F7</color>
     <color name="black_trans80">#14000000</color>
     <color name="et_selected">#F6EBC9</color>
+    <color name="link">#0a80d1</color>
+    <color name="feed_bg">#d3d6db</color>
+    <color name="feed_item_bg">#ffffff</color>
+    <color name="feed_item_border">#c2c3c8</color>
+    <color name="timestamp">#a0a3a7</color>
 </resources>

@@ -20,6 +20,8 @@
             android:layout_marginLeft="8dp"
             android:text="NAMEEEEEEE"
             android:gravity="center_vertical"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/btnDeleteOption"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/black"
             android:textStyle="normal" />

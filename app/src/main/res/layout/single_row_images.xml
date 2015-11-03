@@ -29,6 +29,8 @@
             android:text="NAMEEEEEEE"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/black"
+            android:layout_toLeftOf="@+id/btnDeleteOption"
+            android:layout_marginRight="5dp"
             android:textStyle="normal"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imgSelectedImage"

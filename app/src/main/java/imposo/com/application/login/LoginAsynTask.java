@@ -35,7 +35,6 @@ public class LoginAsynTask extends AsyncTask<Void, Void, Void> implements Networ
     private InputStream is;
     private HttpEntity entity;
     private String result = "";
-    private String sql1,sql2;
     private MaterialDialog.Builder progressDialogBuilder;
     private MaterialDialog progressDialog;
     private RegisterDTO registerDTO;

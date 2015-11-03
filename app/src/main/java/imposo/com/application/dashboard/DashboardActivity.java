@@ -7,6 +7,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
 import imposo.com.application.R;
+import imposo.com.application.dto.MessageCustomDialogDTO;
+import imposo.com.application.ui.MessageDialog;
 import imposo.com.application.ui.slidingtabs.SlidingTabLayout;
 
 
@@ -26,6 +28,18 @@ public class DashboardActivity extends ActionBarActivity {
     }
 
     private void populate(){
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+            if(bundle.getInt("success") == 1){
+                MessageCustomDialogDTO messageCustomDialogDTO = new MessageCustomDialogDTO();
+                messageCustomDialogDTO.setTitle("Success");
+                messageCustomDialogDTO.setMessage("Congratulations !!\nYour question has been posted.");
+                messageCustomDialogDTO.setContext(this);
+                messageCustomDialogDTO.setButton("OK");
+                MessageDialog messageCustomDialog = new MessageDialog(messageCustomDialogDTO);
+                messageCustomDialog.show();
+            }
+        }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));

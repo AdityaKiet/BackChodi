@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import imposo.com.application.R;
+import imposo.com.application.dto.MessageCustomDialogDTO;
+import imposo.com.application.ui.MessageDialog;
 import imposo.com.application.ui.NestedListView;
 import imposo.com.application.util.RealPathUtil;
 
@@ -55,7 +57,7 @@ public class AddNewFeed extends ActionBarActivity implements View.OnClickListene
                 goBack();
             }
         });
-        getSupportActionBar().setTitle("Add Question");
+        getSupportActionBar().setTitle("Ask Question");
         etTitle = (EditText) findViewById(R.id.etTitle);
         etQuestion = (EditText) findViewById(R.id.etQuestion);
         etOption = (EditText) findViewById(R.id.etOption);
@@ -80,7 +82,33 @@ public class AddNewFeed extends ActionBarActivity implements View.OnClickListene
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_add_question){
+            String title = etTitle.getText().toString().trim();
+            String questions = etQuestion.getText().toString().trim();
+            if("".equals(title)){
+                MessageCustomDialogDTO messageCustomDialogDTO = new MessageCustomDialogDTO();
+                messageCustomDialogDTO.setTitle("Error");
+                messageCustomDialogDTO.setMessage("Title can't be blank.");
+                messageCustomDialogDTO.setContext(AddNewFeed.this);
+                messageCustomDialogDTO.setButton("OK");
+                MessageDialog messageCustomDialog = new MessageDialog(messageCustomDialogDTO);
+                messageCustomDialog.show();
+            }else if("".equals(questions)){
+                MessageCustomDialogDTO messageCustomDialogDTO = new MessageCustomDialogDTO();
+                messageCustomDialogDTO.setTitle("Error");
+                messageCustomDialogDTO.setMessage("Question can't be blank.");
+                messageCustomDialogDTO.setContext(AddNewFeed.this);
+                messageCustomDialogDTO.setButton("OK");
+                MessageDialog messageCustomDialog = new MessageDialog(messageCustomDialogDTO);
+                messageCustomDialog.show();
+            }else{
+                Intent intent = new Intent(this, FeedShareWithActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("title", title);
+                bundle.putString("question", questions);
+                intent.putExtras(bundle);
+                startActivity(intent);
 
+            }
         }else if(id == R.id.action_attach){
             loadImagefromGallery();
         }

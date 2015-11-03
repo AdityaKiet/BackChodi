@@ -89,6 +89,11 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:name=".newfeed.FeedShareWithActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".otp.OTPActivity"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"></activity>
