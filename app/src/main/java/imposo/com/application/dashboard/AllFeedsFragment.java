@@ -193,8 +193,8 @@ public class AllFeedsFragment extends Fragment implements View.OnClickListener, 
 
                 }
                 feedItems.addAll(feedDTOs);
+                isDataLoaded = true;
             }
-            isDataLoaded = true;
             txtError.setVisibility(View.GONE);
             imgError.setVisibility(View.GONE);
             listAdapter.notifyDataSetChanged();

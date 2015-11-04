@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/feed_bg"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -11,7 +11,7 @@
         android:layout_marginLeft="@dimen/feed_item_margin"
         android:layout_marginRight="@dimen/feed_item_margin"
         android:layout_marginTop="@dimen/feed_item_margin"
-        android:background="@drawable/bg_parent_rounded_corner"
+        android:background="@android:color/transparent"
         android:orientation="vertical"
         android:paddingBottom="5dp"
         android:paddingTop="@dimen/feed_item_padding_top_bottom">
@@ -25,9 +25,8 @@
 
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/profilePic"
-                android:layout_width="@dimen/feed_item_profile_pic"
-                android:src="@mipmap/logo"
-                android:layout_height="@dimen/feed_item_profile_pic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:scaleType="fitCenter"></com.android.volley.toolbox.NetworkImageView>
 
             <LinearLayout
@@ -57,22 +56,21 @@
             android:id="@+id/txtUrl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/feed_item_status_pad_left_right"
+            android:paddingBottom="2dp"
+            android:paddingLeft="60dp"
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
-            android:paddingTop="@dimen/feed_item_status_pad_top"
             android:text="Status"
+            android:textStyle="bold"
             android:textColor="@color/black"
-            android:textColorLink="#2f6699"
-            android:textStyle="bold" />
+            android:textColorLink="#2f6699" />
 
         <TextView
             android:id="@+id/txtStatusMsg"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
-            android:paddingLeft="@dimen/feed_item_status_pad_left_right"
+            android:paddingLeft="60dp"
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
-            android:paddingTop="5dp"
             android:text="Status"
             android:textColor="@color/black"
             android:textColorLink="#2f6699" />

@@ -19,7 +19,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
     List<ProfileListDTO> versionModels;
     OnItemClickListener clickListener;
 
-    public SimpleRecyclerAdapter(List<ProfileListDTO> versionModels) {
+    public SimpleRecyclerAdapter(List<ProfileListDTO> versixonModels) {
         this.versionModels = versionModels;
 
 

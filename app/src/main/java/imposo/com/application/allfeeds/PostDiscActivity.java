@@ -3,51 +3,80 @@ package imposo.com.application.allfeeds;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Cache;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import imposo.com.application.R;
+import imposo.com.application.allfeeds.comment.CommentAdapter;
 import imposo.com.application.allfeeds.comment.PostCommentActivity;
 import imposo.com.application.allfeeds.data.FeedDTO;
 import imposo.com.application.allfeeds.data.ImageDTO;
 import imposo.com.application.allfeeds.like.LikeAsynTask;
 import imposo.com.application.allfeeds.like.UnLikeAsynTask;
 import imposo.com.application.allfeeds.volley.FeedImageView;
+import imposo.com.application.constants.NetworkConstants;
 import imposo.com.application.dashboard.AllFeedsFragment;
+import imposo.com.application.dto.CommentDTO;
+import imposo.com.application.dto.SessionDTO;
 import imposo.com.application.global.GlobalData;
+import imposo.com.application.util.Helper;
 import imposo.com.application.util.NetworkCheck;
 
 /**
  * Created by adityaagrawal on 03/11/15.
  */
-public class PostDiscActivity extends ActionBarActivity implements View.OnClickListener {
+public class PostDiscActivity extends ActionBarActivity implements View.OnClickListener , NetworkConstants, AbsListView.OnScrollListener{
     private FeedDTO feedDTO;
     private ImageLoader imageLoader = GlobalData.getInstance().getImageLoader();
     private Toolbar toolbar;
     private TextView name, timestamp, statusMsg, url, txtComment, txtShare, txtLike;
     private LinearLayout llFeedImages;
+    private static final String TAG = PostDiscActivity.class.getSimpleName();
+    private ListView listView;
+    private String URL_FEED = GET_NETWORK_IP + "/GetAllComment?postid=POSTiD&first=FIRST&userid=ID&lastcommentid=LASTCOMMENTID";
+    private int preLast;
+    public static List<CommentDTO> comments;
+    private boolean isDataLoaded = false;
+    private int maxId = 0;
+    private CommentAdapter commentAdapter;
+    private View footerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +110,8 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
         txtComment = (TextView) findViewById(R.id.txtComment);
         txtShare = (TextView) findViewById(R.id.txtShare);
         txtLike = (TextView) findViewById(R.id.txtLike);
+        listView = (ListView) findViewById(R.id.listComments);
+        listView.setOnScrollListener(this);
         loadData();
         txtComment.setOnClickListener(this);
         txtLike.setOnClickListener(this);
@@ -117,7 +148,12 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
             txtLike.setText(feedDTO.getLikes() + " Like");
             txtLike.setTextColor(Color.BLACK);
         }
+        comments = new ArrayList<>();
+        commentAdapter = new CommentAdapter(PostDiscActivity.this, feedDTO, listView);
+        listView.setAdapter(commentAdapter);
+        Helper.setListViewHeightBasedOnChildren(listView);
         loadImages();
+        loadCache();
     }
 
     private void loadImages() {
@@ -264,6 +300,121 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
                 startActivity(intent);
                 break;
 
+        }
+    }
+
+
+    private void loadCache(){
+        Cache cache = GlobalData.getInstance().getRequestQueue().getCache();
+        Cache.Entry entry = cache.get(URL_FEED);
+        if (entry != null) {
+            try {
+                String data = new String(entry.data, "UTF-8");
+                try {
+                    parseJsonFeed(new JSONObject(data));
+                } catch (JSONException e) {
+                    if(!isDataLoaded){
+                    }
+                    e.printStackTrace();
+                }
+            } catch (UnsupportedEncodingException e) {
+                if(!isDataLoaded){
+                }
+                e.printStackTrace();
+            }
+        } else {
+            loadJSONFeed();
+        }
+    }
+
+    private void parseJsonFeed(JSONObject response) {
+        List<String> gsonString = new ArrayList<>();
+        List<CommentDTO> feedDTOs = new ArrayList<>();
+
+        try {
+            if(response.getInt("success") == 0){
+
+            }else{
+                Gson gson = new Gson();
+                if(!"false".equals(response.getString("data"))) {
+                    gsonString = gson.fromJson(response.getString("data"), List.class);
+                }else{
+                    listView.removeFooterView(footerView);
+                }
+
+                for(String s : gsonString){
+                    CommentDTO feedDTO = gson.fromJson(s, CommentDTO.class);
+                    feedDTOs.add(feedDTO);
+                    maxId = feedDTO.getCommentId();
+
+                }
+                comments.addAll(feedDTOs);
+                isDataLoaded = true;
+
+            }
+            commentAdapter.notifyDataSetChanged();
+            Helper.setListViewHeightBasedOnChildren(listView);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadJSONFeed(){
+        String url = this.URL_FEED;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SessionDTO sessionDTO = new Gson().fromJson(sharedPreferences.getString("session", null), SessionDTO.class);
+        url = url.replaceFirst("ID", sessionDTO.getId()+"");
+        url = url.replaceFirst("POSTiD", feedDTO.getPostId()+"");
+        url = url.replaceFirst("LASTCOMMENTID", maxId+"");
+
+        if(isDataLoaded)
+            url = url.replaceFirst("FIRST", "0");
+        else
+            url = url.replaceFirst("FIRST", "1");
+
+        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+            public void onResponse(JSONObject response) {
+                listView.setVisibility(View.VISIBLE);
+
+                if (response != null) {
+                    parseJsonFeed(response);
+                    Log.d(TAG, response.toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if(!isDataLoaded){
+                    Log.e(TAG, error.toString());
+                    loadJSONFeed();
+                }
+            }
+        }
+        ){
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        GlobalData.getInstance().addToRequestQueue(jsonReq);
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        final int lastItem = firstVisibleItem + visibleItemCount;
+        if(lastItem == totalItemCount) {
+            if(preLast!=lastItem){
+                loadJSONFeed();
+                android.support.design.widget.Snackbar.make(getCurrentFocus(), "Loading... Please wait..", android.support.design.widget.Snackbar.LENGTH_SHORT).show();
+                preLast = lastItem;
+            }
         }
     }
 
