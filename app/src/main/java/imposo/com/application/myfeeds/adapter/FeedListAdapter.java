@@ -1,4 +1,4 @@
-package imposo.com.application.allfeeds.adapter;
+package imposo.com.application.myfeeds.adapter;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -29,15 +29,15 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import imposo.com.application.R;
-import imposo.com.application.allfeeds.PostDiscActivity;
-import imposo.com.application.allfeeds.comment.PostCommentActivity;
-import imposo.com.application.allfeeds.data.FeedDTO;
-import imposo.com.application.allfeeds.like.LikeAsynTask;
-import imposo.com.application.allfeeds.like.UnLikeAsynTask;
 import imposo.com.application.allfeeds.volley.FeedImageView;
 import imposo.com.application.constants.NetworkConstants;
-import imposo.com.application.dashboard.AllFeedsFragment;
+import imposo.com.application.dashboard.MyFeedFragment;
 import imposo.com.application.global.GlobalData;
+import imposo.com.application.myfeeds.PostDiscActivity;
+import imposo.com.application.myfeeds.comment.PostCommentActivity;
+import imposo.com.application.myfeeds.data.FeedDTO;
+import imposo.com.application.myfeeds.like.LikeAsynTask;
+import imposo.com.application.myfeeds.like.UnLikeAsynTask;
 import imposo.com.application.util.NetworkCheck;
 
 public class FeedListAdapter extends BaseAdapter implements NetworkConstants {
@@ -49,7 +49,7 @@ public class FeedListAdapter extends BaseAdapter implements NetworkConstants {
 
 	public FeedListAdapter(Activity activity) {
         this.activity = activity;
-        this.feedItems = AllFeedsFragment.feedItems;
+        this.feedItems = MyFeedFragment.feedItems;
     }
  
     @Override
@@ -162,20 +162,20 @@ public class FeedListAdapter extends BaseAdapter implements NetworkConstants {
                         int likes = feedDTO.getLikes() - 1;
                         UnLikeAsynTask likeAsynTask = new UnLikeAsynTask(activity, feedDTO, likes);
                         likeAsynTask.execute();
-                        int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                        int index = MyFeedFragment.feedItems.indexOf(feedDTO);
                         feedDTO.setLikes(likes);
                         feedDTO.setLiked(false);
-                        AllFeedsFragment.feedItems.set(index, feedDTO);
+                        MyFeedFragment.feedItems.set(index, feedDTO);
                         notifyDataSetChanged();
                     } else {
                         FeedDTO feedDTO = feedItems.get(position);
                         int likes = feedDTO.getLikes() + 1;
                         LikeAsynTask likeAsynTask = new LikeAsynTask(activity, feedDTO, likes);
                         likeAsynTask.execute();
-                        int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                        int index = MyFeedFragment.feedItems.indexOf(feedDTO);
                         feedDTO.setLikes(likes);
                         feedDTO.setLiked(true);
-                        AllFeedsFragment.feedItems.set(index, feedDTO);
+                        MyFeedFragment.feedItems.set(index, feedDTO);
                         notifyDataSetChanged();
                     }
                 }else{

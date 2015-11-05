@@ -1,4 +1,4 @@
-package imposo.com.application.allfeeds;
+package imposo.com.application.myfeeds;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -48,18 +48,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import imposo.com.application.R;
-import imposo.com.application.allfeeds.comment.CommentAdapter;
-import imposo.com.application.allfeeds.comment.PostCommentActivity;
-import imposo.com.application.allfeeds.data.FeedDTO;
-import imposo.com.application.allfeeds.data.ImageDTO;
-import imposo.com.application.allfeeds.like.LikeAsynTask;
-import imposo.com.application.allfeeds.like.UnLikeAsynTask;
 import imposo.com.application.allfeeds.volley.FeedImageView;
 import imposo.com.application.constants.NetworkConstants;
-import imposo.com.application.dashboard.AllFeedsFragment;
+import imposo.com.application.dashboard.MyFeedFragment;
 import imposo.com.application.dto.CommentDTO;
 import imposo.com.application.dto.SessionDTO;
 import imposo.com.application.global.GlobalData;
+import imposo.com.application.myfeeds.comment.CommentAdapter;
+import imposo.com.application.myfeeds.comment.PostCommentActivity;
+import imposo.com.application.myfeeds.data.FeedDTO;
+import imposo.com.application.myfeeds.data.ImageDTO;
+import imposo.com.application.myfeeds.like.LikeAsynTask;
+import imposo.com.application.myfeeds.like.UnLikeAsynTask;
 import imposo.com.application.util.NetworkCheck;
 
 /**
@@ -309,23 +309,23 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
                         likeAsynTask.execute();
                         txtLike.setText(likes + " Like");
                         txtLike.setTextColor(Color.BLACK);
-                        int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                        int index = MyFeedFragment.feedItems.indexOf(feedDTO);
                         feedDTO.setLikes(likes);
                         feedDTO.setLiked(false);
-                        AllFeedsFragment.feedItems.set(index, feedDTO);
+                        MyFeedFragment.feedItems.set(index, feedDTO);
                     } else {
                         int likes = feedDTO.getLikes() +1;
                         LikeAsynTask likeAsynTask = new LikeAsynTask(this, feedDTO, likes);
                         likeAsynTask.execute();
                         txtLike.setText(likes + " Unlike");
                         txtLike.setTextColor(Color.BLUE);
-                        int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                        int index = MyFeedFragment.feedItems.indexOf(feedDTO);
                         feedDTO.setLikes(likes);
                         feedDTO.setLiked(true);
-                        AllFeedsFragment.feedItems.set(index, feedDTO);
+                        MyFeedFragment.feedItems.set(index, feedDTO);
                     }
                 }else{
-                    SnackbarManager.show(com.nispok.snackbar.Snackbar.with(getApplicationContext())
+                    SnackbarManager.show(Snackbar.with(getApplicationContext())
                             .text("Network not available.")
                             .textColor(Color.WHITE)
                             .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
@@ -452,7 +452,7 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
         if(lastItem == totalItemCount) {
             if(preLast!=lastItem){
                 loadJSONFeed();
-                SnackbarManager.show(com.nispok.snackbar.Snackbar.with(getApplicationContext())
+                SnackbarManager.show(Snackbar.with(getApplicationContext())
                         .text("Loading... Please wait..")
                         .textColor(Color.WHITE)
                         .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
@@ -467,7 +467,7 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
         if (requestCode == REQUEST_GET_MAP_LOCATION && resultCode == Activity.RESULT_OK) {
             int success = data.getIntExtra("success", 0);
             if(success == 1){
-                SnackbarManager.show(com.nispok.snackbar.Snackbar.with(getApplicationContext())
+                SnackbarManager.show(Snackbar.with(getApplicationContext())
                         .text("Reply submitted !!!!")
                         .textColor(Color.WHITE)
                         .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)

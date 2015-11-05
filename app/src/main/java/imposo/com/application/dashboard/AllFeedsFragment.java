@@ -2,10 +2,10 @@ package imposo.com.application.dashboard;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
+import com.nispok.snackbar.SnackbarManager;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import org.json.JSONException;
@@ -218,7 +219,12 @@ public class AllFeedsFragment extends Fragment implements View.OnClickListener, 
         if(lastItem == totalItemCount) {
             if(preLast!=lastItem){
                 loadJSONFeed();
-                Snackbar.make(getView(), "Loading... Please wait..", Snackbar.LENGTH_SHORT).show();
+                SnackbarManager.show(com.nispok.snackbar.Snackbar.with(getActivity())
+                        .text("Loading... Please wait..!!!")
+                        .textColor(Color.WHITE)
+                        .duration(com.nispok.snackbar.Snackbar.SnackbarDuration.LENGTH_SHORT)
+                        .color(getResources().getColor(R.color.ColorPrimary)), getActivity());
+              //  Snackbar.make(getView(), "", Snackbar.LENGTH_SHORT).show();
                 preLast = lastItem;
             }
         }

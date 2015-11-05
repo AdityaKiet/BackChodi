@@ -94,7 +94,17 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:name=".myfeeds.PostDiscActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".allfeeds.FullImageActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".myfeeds.FullImageActivity"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"></activity>
 
@@ -105,6 +115,31 @@
 
         <activity
             android:name=".allfeeds.comment.PostCommentActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".myfeeds.comment.PostCommentActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".allfeeds.reply.ReplyActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".myfeeds.reply.ReplyActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".allfeeds.CommentDiscActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".myfeeds.CommentDiscActivity"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"></activity>
 

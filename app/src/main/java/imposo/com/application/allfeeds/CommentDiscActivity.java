@@ -1,6 +1,5 @@
 package imposo.com.application.allfeeds;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -40,99 +38,64 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import imposo.com.application.R;
-import imposo.com.application.allfeeds.comment.CommentAdapter;
-import imposo.com.application.allfeeds.comment.PostCommentActivity;
-import imposo.com.application.allfeeds.data.FeedDTO;
-import imposo.com.application.allfeeds.data.ImageDTO;
-import imposo.com.application.allfeeds.like.LikeAsynTask;
-import imposo.com.application.allfeeds.like.UnLikeAsynTask;
+import imposo.com.application.allfeeds.comment.LikeAsynTask;
+import imposo.com.application.allfeeds.comment.UnlikeAsynTask;
+import imposo.com.application.allfeeds.reply.ReplyActivity;
+import imposo.com.application.allfeeds.reply.ReplyAdapter;
 import imposo.com.application.allfeeds.volley.FeedImageView;
 import imposo.com.application.constants.NetworkConstants;
-import imposo.com.application.dashboard.AllFeedsFragment;
 import imposo.com.application.dto.CommentDTO;
+import imposo.com.application.dto.ReplyDTO;
 import imposo.com.application.dto.SessionDTO;
 import imposo.com.application.global.GlobalData;
 import imposo.com.application.util.NetworkCheck;
 
 /**
- * Created by adityaagrawal on 03/11/15.
+ * Created by adityaagrawal on 05/11/15.
  */
-public class PostDiscActivity extends ActionBarActivity implements View.OnClickListener , NetworkConstants, AbsListView.OnScrollListener{
-    private FeedDTO feedDTO;
+public class CommentDiscActivity extends ActionBarActivity implements NetworkConstants, View.OnClickListener, AbsListView.OnScrollListener{
+    private CommentDTO commentDTO;
     private ImageLoader imageLoader = GlobalData.getInstance().getImageLoader();
     private Toolbar toolbar;
     private TextView name, timestamp, statusMsg, url, txtComment, txtShare, txtLike;
     private LinearLayout llFeedImages;
     private static final String TAG = PostDiscActivity.class.getSimpleName();
     private ListView listView;
-    public static String URL_FEED = GET_NETWORK_IP + "/GetAllComment?postid=POSTiD&first=FIRST&userid=ID&lastcommentid=LASTCOMMENTID";
+    public static List<ReplyDTO> replies;
+    public String URL_FEED = GET_NETWORK_IP + "/GetAllCommentReply?lastreplyid=LASTREPLYiD&first=FIRST&userid=ID&commentid=COMMENTiD";
     private int preLast;
-    public static List<CommentDTO> comments;
+    private ReplyAdapter replyAdapter;
     private boolean isDataLoaded = false;
-    private static final int REQUEST_GET_MAP_LOCATION = 0;
     private int maxId = 0;
     private View footerView;
-    private CommentAdapter commentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.post_disc_activity);
         Bundle bundle = getIntent().getExtras();
-        Gson gson = new Gson();
-        feedDTO = gson.fromJson(bundle.getString("gson"), FeedDTO.class);
-        populate();
+        commentDTO = new Gson().fromJson(bundle.getString("commentDTO"), CommentDTO.class);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        invokeFragmentManagerNoteStateNotSaved();
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private void invokeFragmentManagerNoteStateNotSaved() {
-        if (Build.VERSION.SDK_INT < 11) {
-            return;
-        }
-        try {
-            Class cls = getClass();
-            do {
-                cls = cls.getSuperclass();
-            } while (!"Activity".equals(cls.getSimpleName()));
-            Field fragmentMgrField = cls.getDeclaredField("mFragments");
-            fragmentMgrField.setAccessible(true);
-
-            Object fragmentMgr = fragmentMgrField.get(this);
-            cls = fragmentMgr.getClass();
-
-            Method noteStateNotSavedMethod = cls.getDeclaredMethod("noteStateNotSaved", new Class[] {});
-            noteStateNotSavedMethod.invoke(fragmentMgr, new Object[] {});
-            Log.d("DLOutState", "Successful call for noteStateNotSaved!!!");
-        } catch (Exception ex) {
-            Log.e("DLOutState", "Exception on worka FM.noteStateNotSaved", ex);
-        }
-    }
     private void populate() {
-        footerView =  ((LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.list_header_view, null, false);
+        setContentView(R.layout.comment_disc_activity);
+        replies = new ArrayList<>();
+        maxId = 0;
+        isDataLoaded = false;
+        footerView =  ((LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.comment_list_header_view, null, false);
         listView = (ListView) findViewById(R.id.listComments);
-
         listView.addHeaderView(footerView);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (feedDTO.getIsAnonyomous() == 1)
+        if (commentDTO.getIsAnonyomous() == 1)
             getSupportActionBar().setTitle("Anonymous");
         else
-            getSupportActionBar().setTitle(feedDTO.getPostCreaterName());
+            getSupportActionBar().setTitle(commentDTO.getCommenterName());
         toolbar.setNavigationIcon(R.mipmap.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,57 +113,55 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
         txtShare = (TextView) footerView.findViewById(R.id.txtShare);
         txtLike = (TextView) footerView.findViewById(R.id.txtLike);
         loadData();
-
+        if(!commentDTO.getImageLink().equals(""))
+            loadImages();
         listView.setOnScrollListener(this);
         txtComment.setOnClickListener(this);
         txtLike.setOnClickListener(this);
         txtShare.setOnClickListener(this);
 
     }
-
     private void loadData() {
         NetworkImageView profilePic = (NetworkImageView) findViewById(R.id.profilePic);
-        if (feedDTO.getIsAnonyomous() == 1)
+        if (commentDTO.getIsAnonyomous() == 1)
             name.setText("Anonymous");
         else
-            name.setText(feedDTO.getPostCreaterName());
+            name.setText(commentDTO.getCommenterName());
 
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            timestamp.setText(new SimpleDateFormat("dd MMM, yyyy").format(dateFormat.parse(feedDTO.getPostTime())));
+            timestamp.setText(new SimpleDateFormat("dd MMM, yyyy").format(dateFormat.parse(commentDTO.getCommentTime())));
         } catch (ParseException e) {
             timestamp.setVisibility(View.GONE);
         }
         profilePic.setDefaultImageResId(R.mipmap.logo);
         profilePic.setErrorImageResId(R.mipmap.logo);
-        if (feedDTO.getIsAnonyomous() == 1)
+        if (commentDTO.getIsAnonyomous() == 1)
             profilePic.setImageUrl(GET_IMAGE_NETWORK_IP + "anon.png", imageLoader);
         else
-            profilePic.setImageUrl(GET_IMAGE_NETWORK_IP + feedDTO.getPostCreaterId() +".png", imageLoader);
-        statusMsg.setText(feedDTO.getPostText());
-        url.setText(feedDTO.getPostTitle());
+            profilePic.setImageUrl(GET_IMAGE_NETWORK_IP + commentDTO.getCommenterId() +".png", imageLoader);
+        statusMsg.setText(commentDTO.getComment());
+        url.setText(commentDTO.getOption());
         Linkify.addLinks(statusMsg, Linkify.ALL);
 
 
-        if (feedDTO.isLiked()) {
-            txtLike.setText(feedDTO.getLikes() + " Unlike");
+        if (commentDTO.isLiked()) {
+            txtLike.setText(commentDTO.getLikes() + " Unlike");
             txtLike.setTextColor(Color.BLUE);
         } else {
-            txtLike.setText(feedDTO.getLikes() + " Like");
+            txtLike.setText(commentDTO.getLikes() + " Like");
             txtLike.setTextColor(Color.BLACK);
         }
-        comments = new ArrayList<>();
-        commentAdapter = new CommentAdapter(PostDiscActivity.this, feedDTO, listView);
-        listView.setAdapter(commentAdapter);
-        loadImages();
+        replies = new ArrayList<>();
+        replyAdapter = new ReplyAdapter(this, commentDTO, listView);
+        listView.setAdapter(replyAdapter);
         loadCache();
     }
 
     private void loadImages() {
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        for (final ImageDTO imageDTO : feedDTO.getImages()) {
+            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             FeedImageView feedImageView = (FeedImageView) layoutInflater.inflate(R.layout.feed_image_view, null, false);
-            feedImageView.setImageUrl(imageDTO.getImageLink(), imageLoader);
+            feedImageView.setImageUrl(commentDTO.getImageLink(), imageLoader);
             feedImageView.setVisibility(View.VISIBLE);
             llFeedImages.addView(feedImageView);
             feedImageView.setResponseObserver(new FeedImageView.ResponseObserver() {
@@ -215,7 +176,7 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
             feedImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    GlobalData.getInstance().getImageLoader().get(imageDTO.getImageLink(), new ImageLoader.ImageListener() {
+                    GlobalData.getInstance().getImageLoader().get(commentDTO.getImageLink(), new ImageLoader.ImageListener() {
 
                         public void onErrorResponse(VolleyError arg0) {
                         }
@@ -230,12 +191,12 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
                                 OutputStream out = getContentResolver().openOutputStream(uri);
                                 mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
                                 out.close();
-                                Intent intent = new Intent(PostDiscActivity.this, FullImageActivity.class);
+                                Intent intent = new Intent(CommentDiscActivity.this, FullImageActivity.class);
                                 Bundle bundle = new Bundle();
-                                if (feedDTO.getIsAnonyomous() == 1)
+                                if (commentDTO.getIsAnonyomous() == 1)
                                     bundle.putString("name", "Anonymous");
                                 else
-                                    bundle.putString("name", feedDTO.getPostCreaterName());
+                                    bundle.putString("name", commentDTO.getCommenterName());
                                 ByteArrayOutputStream bs = new ByteArrayOutputStream();
                                 mBitmap.compress(Bitmap.CompressFormat.PNG, 50, bs);
                                 intent.putExtra("image", bs.toByteArray());
@@ -250,99 +211,8 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
 
                 }
             });
-        }
+
     }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.txtShare:
-                if(feedDTO.getImages().size() == 0){
-                    Intent share = new Intent(Intent.ACTION_SEND);
-                    share.setType("text/plain");
-                    share.putExtra(Intent.EXTRA_TEXT, feedDTO.getPostTitle() + "\n" + feedDTO.getPostText());
-                    startActivity(Intent.createChooser(share, "Share Using"));
-                }else{
-                    GlobalData.getInstance().getImageLoader().get(feedDTO.getImages().get(0).getImageLink(), new ImageLoader.ImageListener() {
-
-                        public void onErrorResponse(VolleyError arg0) {
-                        }
-
-                        @Override
-                        public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
-                            Bitmap mBitmap = response.getBitmap();
-                            ContentValues image = new ContentValues();
-                            image.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
-                            Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, image);
-                            try {
-                                OutputStream out = getContentResolver().openOutputStream(uri);
-                                boolean success = mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                                out.close();
-                                if (!success) {
-                                    Intent share = new Intent(Intent.ACTION_SEND);
-                                    share.setType("text/plain");
-                                    share.putExtra(Intent.EXTRA_TEXT, feedDTO.getPostTitle() + "\n" + feedDTO.getPostText());
-                                    startActivity(Intent.createChooser(share, "Share Using"));
-                                } else {
-                                    Intent share = new Intent(Intent.ACTION_SEND);
-                                    share.setType("image/jpeg");
-                                    share.putExtra(Intent.EXTRA_STREAM, uri);
-                                    share.putExtra(Intent.EXTRA_TEXT, feedDTO.getPostTitle() + "\n" + feedDTO.getPostText());
-                                    startActivity(Intent.createChooser(share, "Share Using"));
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                    });
-                }
-
-                break;
-            case R.id.txtLike:
-                if(NetworkCheck.isNetworkAvailable(this)) {
-                    if (feedDTO.isLiked()) {
-                        int likes = feedDTO.getLikes() - 1;
-                        UnLikeAsynTask likeAsynTask = new UnLikeAsynTask(this, feedDTO, likes);
-                        likeAsynTask.execute();
-                        txtLike.setText(likes + " Like");
-                        txtLike.setTextColor(Color.BLACK);
-                        int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
-                        feedDTO.setLikes(likes);
-                        feedDTO.setLiked(false);
-                        AllFeedsFragment.feedItems.set(index, feedDTO);
-                    } else {
-                        int likes = feedDTO.getLikes() +1;
-                        LikeAsynTask likeAsynTask = new LikeAsynTask(this, feedDTO, likes);
-                        likeAsynTask.execute();
-                        txtLike.setText(likes + " Unlike");
-                        txtLike.setTextColor(Color.BLUE);
-                        int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
-                        feedDTO.setLikes(likes);
-                        feedDTO.setLiked(true);
-                        AllFeedsFragment.feedItems.set(index, feedDTO);
-                    }
-                }else{
-                    SnackbarManager.show(com.nispok.snackbar.Snackbar.with(getApplicationContext())
-                            .text("Network not available.")
-                            .textColor(Color.WHITE)
-                            .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
-                            .color(getResources().getColor(R.color.black)), this);
-                }
-                break;
-            case R.id.txtComment:
-                Bundle bundle = new Bundle();
-                bundle.putString("gson", new Gson().toJson(feedDTO));
-                Intent intent = new Intent(this, PostCommentActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                break;
-
-        }
-    }
-
 
     private void loadCache(){
         Cache cache = GlobalData.getInstance().getRequestQueue().getCache();
@@ -367,9 +237,10 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
         }
     }
 
+
     private void parseJsonFeed(JSONObject response) {
         List<String> gsonString = new ArrayList<>();
-        List<CommentDTO> feedDTOs = new ArrayList<>();
+        List<ReplyDTO> replyDTOs = new ArrayList<>();
 
         try {
             if(response.getInt("success") == 0){
@@ -380,20 +251,19 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
                     gsonString = gson.fromJson(response.getString("data"), List.class);
                 }
                 for(String s : gsonString){
-                    CommentDTO feedDTO = gson.fromJson(s, CommentDTO.class);
-                    if(!comments.contains(feedDTO)){
-                        feedDTOs.add(feedDTO);
-                        maxId = feedDTO.getCommentId();
+                    ReplyDTO feedDTO = gson.fromJson(s, ReplyDTO.class);
+                    if(!replies.contains(feedDTO)){
+                        replyDTOs.add(feedDTO);
+                        maxId = feedDTO.getReplyId();
                     }
 
                 }
 
-                comments.addAll(feedDTOs);
+                replies.addAll(replyDTOs);
                 isDataLoaded = true;
 
             }
-            commentAdapter.notifyDataSetChanged();
-        //    Helper.setListViewHeightBasedOnChildren(listView);
+            replyAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -404,8 +274,8 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SessionDTO sessionDTO = new Gson().fromJson(sharedPreferences.getString("session", null), SessionDTO.class);
         url = url.replaceFirst("ID", sessionDTO.getId()+"");
-        url = url.replaceFirst("POSTiD", feedDTO.getPostId()+"");
-        url = url.replaceFirst("LASTCOMMENTID", maxId+"");
+        url = url.replaceFirst("COMMENTiD", commentDTO.getCommentId()+"");
+        url = url.replaceFirst("LASTREPLYiD", maxId+"");
 
         if(isDataLoaded)
             url = url.replaceFirst("FIRST", "0");
@@ -442,6 +312,89 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
     }
 
     @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.txtLike:
+                if (NetworkCheck.isNetworkAvailable(this)) {
+                    if (commentDTO.isLiked()) {
+                        int likes = commentDTO.getLikes() - 1;
+                        UnlikeAsynTask likeAsynTask = new UnlikeAsynTask(this, commentDTO, likes);
+                        likeAsynTask.execute();
+                        txtLike.setText(likes + " Like");
+                        txtLike.setTextColor(Color.BLACK);
+                        int index = PostDiscActivity.comments.indexOf(commentDTO);
+                        commentDTO.setLikes(likes);
+                        commentDTO.setLiked(false);
+
+                        PostDiscActivity.comments.set(index, commentDTO);
+                    } else {
+                        int likes = commentDTO.getLikes() + 1;
+                        LikeAsynTask likeAsynTask = new LikeAsynTask(this, commentDTO, likes);
+                        likeAsynTask.execute();
+                        txtLike.setText(likes + " Unlike");
+                        txtLike.setTextColor(Color.BLUE);
+                        int index = PostDiscActivity.comments.indexOf(commentDTO);
+                        commentDTO.setLikes(likes);
+                        commentDTO.setLiked(true);
+
+                        PostDiscActivity.comments.set(index, commentDTO);
+                    }
+                }
+                break;
+            case R.id.txtComment:
+
+                Intent intent = new Intent(this, ReplyActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("commentDTO", new Gson().toJson(commentDTO));
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
+            case R.id.txtShare:
+                if (commentDTO.getImageLink().equals("")) {
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("text/plain");
+                    share.putExtra(Intent.EXTRA_TEXT, commentDTO.getComment());
+                    startActivity(Intent.createChooser(share, "Share Using"));
+                } else {
+                    GlobalData.getInstance().getImageLoader().get(commentDTO.getImageLink(), new ImageLoader.ImageListener(){
+                        public void onErrorResponse(VolleyError arg0) {
+                        }
+
+                        @Override
+                        public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
+                            Bitmap mBitmap = response.getBitmap();
+                            ContentValues image = new ContentValues();
+                            image.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
+                            Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, image);
+                            try {
+                                OutputStream out = getContentResolver().openOutputStream(uri);
+                                boolean success = mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                                out.close();
+                                if (!success) {
+                                    Intent share = new Intent(Intent.ACTION_SEND);
+                                    share.setType("text/plain");
+                                    share.putExtra(Intent.EXTRA_TEXT, commentDTO.getComment());
+                                    startActivity(Intent.createChooser(share, "Share Using"));
+                                } else {
+                                    Intent share = new Intent(Intent.ACTION_SEND);
+                                    share.setType("image/jpeg");
+                                    share.putExtra(Intent.EXTRA_STREAM, uri);
+                                    share.putExtra(Intent.EXTRA_TEXT, commentDTO.getComment());
+                                    startActivity(Intent.createChooser(share, "Share Using"));
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    });
+                }
+                break;
+        }
+    }
+
+    @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
     }
@@ -463,28 +416,8 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_GET_MAP_LOCATION && resultCode == Activity.RESULT_OK) {
-            int success = data.getIntExtra("success", 0);
-            if(success == 1){
-                SnackbarManager.show(com.nispok.snackbar.Snackbar.with(getApplicationContext())
-                        .text("Reply submitted !!!!")
-                        .textColor(Color.WHITE)
-                        .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
-                        .color(getResources().getColor(R.color.ColorPrimary)), this);
-            }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        try{
-            if(commentAdapter != null){
-                commentAdapter.notifyDataSetChanged();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    protected void onResume() {
         super.onResume();
+        populate();
     }
 }

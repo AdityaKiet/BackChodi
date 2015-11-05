@@ -1,4 +1,4 @@
-package imposo.com.application.allfeeds.comment;
+package imposo.com.application.myfeeds.comment;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -29,14 +29,14 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import imposo.com.application.R;
-import imposo.com.application.allfeeds.CommentDiscActivity;
-import imposo.com.application.allfeeds.PostDiscActivity;
-import imposo.com.application.allfeeds.data.FeedDTO;
-import imposo.com.application.allfeeds.reply.ReplyActivity;
 import imposo.com.application.allfeeds.volley.FeedImageView;
 import imposo.com.application.constants.NetworkConstants;
 import imposo.com.application.dto.CommentDTO;
 import imposo.com.application.global.GlobalData;
+import imposo.com.application.myfeeds.CommentDiscActivity;
+import imposo.com.application.myfeeds.PostDiscActivity;
+import imposo.com.application.myfeeds.data.FeedDTO;
+import imposo.com.application.myfeeds.reply.ReplyActivity;
 import imposo.com.application.util.NetworkCheck;
 
 /**

@@ -28,6 +28,7 @@ public class Splash extends ActionBarActivity {
         Fabric.with(this, new Crashlytics());
         populate();
         GlobalData.getInstance().getRequestQueue().getCache().clear();
+
         if(sharedPreferences.getString("session", null) != null ){
             Intent intent = new Intent(this, DashboardActivity.class);
             startActivity(intent);

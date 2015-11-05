@@ -105,6 +105,19 @@ public class CommentDTO {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if(((CommentDTO)o).getCommentId() == this.getCommentId())
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getCommentId();
+    }
+
+    @Override
     public String toString() {
         return "CommentDTO [commentId=" + commentId + ", commenterId="
                 + commenterId + ", comment=" + comment + ", isAnonyomous="

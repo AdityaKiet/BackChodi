@@ -1,4 +1,4 @@
-package imposo.com.application.allfeeds.comment;
+package imposo.com.application.myfeeds.comment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,9 +29,9 @@ import java.io.File;
 import java.io.IOException;
 
 import imposo.com.application.R;
-import imposo.com.application.allfeeds.data.FeedDTO;
-import imposo.com.application.allfeeds.data.OptionDTO;
 import imposo.com.application.dto.MessageCustomDialogDTO;
+import imposo.com.application.myfeeds.data.FeedDTO;
+import imposo.com.application.myfeeds.data.OptionDTO;
 import imposo.com.application.ui.MessageDialog;
 import imposo.com.application.util.RealPathUtil;
 
@@ -98,7 +98,7 @@ public class PostCommentActivity extends ActionBarActivity implements View.OnCli
             viewOptions.setVisibility(View.GONE);
             radioGroup.setVisibility(View.GONE);
         }else{
-            android.widget.RadioButton radioButton;
+            RadioButton radioButton;
             for(OptionDTO s : feedDTO.getOptions()){
                 radioButton = new RadioButton(this);
                 radioButton.setText(s.getOption());
