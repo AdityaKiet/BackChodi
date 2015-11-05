@@ -32,6 +32,7 @@ import imposo.com.application.R;
 import imposo.com.application.allfeeds.data.FeedDTO;
 import imposo.com.application.constants.NetworkConstants;
 import imposo.com.application.dashboard.AllFeedsFragment;
+import imposo.com.application.dashboard.MyFeedFragment;
 import imposo.com.application.dto.SessionDTO;
 
 /**
@@ -45,7 +46,7 @@ public class UnLikeAsynTask extends AsyncTask<Void, Void, Void> implements Netwo
     private InputStream is;
     private HttpEntity entity;
     private String result = "";
-
+    private SessionDTO sessionDTO;
     public UnLikeAsynTask(Context context, FeedDTO feedDTO, int likes){
         this.context = context;
         this.feedDTO = feedDTO;
@@ -55,7 +56,7 @@ public class UnLikeAsynTask extends AsyncTask<Void, Void, Void> implements Netwo
     @Override
     protected Void doInBackground(Void... params) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        SessionDTO sessionDTO = new Gson().fromJson(sharedPreferences.getString("session", null), SessionDTO.class);
+        sessionDTO = new Gson().fromJson(sharedPreferences.getString("session", null), SessionDTO.class);
 
         List<NameValuePair> list = new ArrayList<NameValuePair>(1);
         list.add(new BasicNameValuePair("userid", sessionDTO.getId()+""));
@@ -82,6 +83,15 @@ public class UnLikeAsynTask extends AsyncTask<Void, Void, Void> implements Netwo
             feedDTO.setLikes(likes + 1);
             feedDTO.setLiked(true);
             AllFeedsFragment.feedItems.set(index, feedDTO);
+
+            if(feedDTO.getPostCreaterId() == sessionDTO.getId()){
+                int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
+                if(index1 != -1) {
+                    MyFeedFragment.feedItems.set(index1, feedDTO);
+                    MyFeedFragment.listAdapter.notifyDataSetChanged();
+                }
+            }
+
             Snackbar.make(((ActionBarActivity) context).getCurrentFocus(), "Some network error has occured.", Snackbar.LENGTH_SHORT).show();
 
         }
@@ -99,6 +109,15 @@ public class UnLikeAsynTask extends AsyncTask<Void, Void, Void> implements Netwo
                 feedDTO.setLikes(likes + 1);
                 feedDTO.setLiked(true);
                 AllFeedsFragment.feedItems.set(index, feedDTO);
+
+                if(feedDTO.getPostCreaterId() == sessionDTO.getId()){
+                    int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
+                    if(index1 != -1) {
+                        MyFeedFragment.feedItems.set(index1, feedDTO);
+                        MyFeedFragment.listAdapter.notifyDataSetChanged();
+                    }
+                }
+
                 Snackbar.make(((ActionBarActivity) context).getCurrentFocus(), "Some network error has occured.", Snackbar.LENGTH_SHORT).show();
             }
         }catch (Exception e){
@@ -107,6 +126,15 @@ public class UnLikeAsynTask extends AsyncTask<Void, Void, Void> implements Netwo
             feedDTO.setLikes(likes + 1);
             feedDTO.setLiked(true);
             AllFeedsFragment.feedItems.set(index, feedDTO);
+
+            if(feedDTO.getPostCreaterId() == sessionDTO.getId()){
+                int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
+                if(index1 != -1) {
+                    MyFeedFragment.feedItems.set(index1, feedDTO);
+                    MyFeedFragment.listAdapter.notifyDataSetChanged();
+                }
+            }
+
             SnackbarManager.show(com.nispok.snackbar.Snackbar.with(context.getApplicationContext()).text("Some network error has occured")
                     .textColor(Color.WHITE)
                     .duration(com.nispok.snackbar.Snackbar.SnackbarDuration.LENGTH_SHORT)

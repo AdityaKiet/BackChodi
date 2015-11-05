@@ -1,4 +1,4 @@
-package imposo.com.application.myfeeds.comment;
+package imposo.com.application.myactivities.comment;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -34,9 +34,9 @@ import imposo.com.application.allfeeds.volley.FeedImageView;
 import imposo.com.application.constants.NetworkConstants;
 import imposo.com.application.dto.CommentDTO;
 import imposo.com.application.global.GlobalData;
-import imposo.com.application.myfeeds.CommentDiscActivity;
-import imposo.com.application.myfeeds.PostDiscActivity;
-import imposo.com.application.myfeeds.reply.ReplyActivity;
+import imposo.com.application.myactivities.CommentDiscActivity;
+import imposo.com.application.myactivities.PostDiscActivity;
+import imposo.com.application.myactivities.reply.ReplyActivity;
 import imposo.com.application.util.NetworkCheck;
 
 /**

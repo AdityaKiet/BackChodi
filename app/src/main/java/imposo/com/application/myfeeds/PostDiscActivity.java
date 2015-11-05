@@ -48,16 +48,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import imposo.com.application.R;
+import imposo.com.application.allfeeds.data.FeedDTO;
 import imposo.com.application.allfeeds.volley.FeedImageView;
 import imposo.com.application.constants.NetworkConstants;
+import imposo.com.application.dashboard.AllFeedsFragment;
+import imposo.com.application.dashboard.MyAnswersFragment;
 import imposo.com.application.dashboard.MyFeedFragment;
 import imposo.com.application.dto.CommentDTO;
 import imposo.com.application.dto.SessionDTO;
 import imposo.com.application.global.GlobalData;
 import imposo.com.application.myfeeds.comment.CommentAdapter;
 import imposo.com.application.myfeeds.comment.PostCommentActivity;
-import imposo.com.application.myfeeds.data.FeedDTO;
-import imposo.com.application.myfeeds.data.ImageDTO;
+import imposo.com.application.allfeeds.data.ImageDTO;
 import imposo.com.application.myfeeds.like.LikeAsynTask;
 import imposo.com.application.myfeeds.like.UnLikeAsynTask;
 import imposo.com.application.util.NetworkCheck;
@@ -80,6 +82,7 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
     private static final int REQUEST_GET_MAP_LOCATION = 0;
     private int maxId = 0;
     private View footerView;
+    private SessionDTO sessionDTO;
     private CommentAdapter commentAdapter;
 
     @Override
@@ -122,6 +125,9 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
         }
     }
     private void populate() {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        sessionDTO = new Gson().fromJson(sharedPreferences.getString("session",null), SessionDTO.class);
         footerView =  ((LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.list_header_view, null, false);
         listView = (ListView) findViewById(R.id.listComments);
 
@@ -313,6 +319,22 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
                         feedDTO.setLikes(likes);
                         feedDTO.setLiked(false);
                         MyFeedFragment.feedItems.set(index, feedDTO);
+
+                        if(AllFeedsFragment.feedItems.contains(feedDTO)){
+                            int index1 = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                            if(index1 != -1) {
+                                AllFeedsFragment.feedItems.set(index1, feedDTO);
+                                AllFeedsFragment.listAdapter.notifyDataSetChanged();
+                            }
+                        }
+                        if(MyAnswersFragment.feedItems.contains(feedDTO)){
+                            int index1 = MyAnswersFragment.feedItems.indexOf(feedDTO);
+                            if(index1 != -1) {
+                                MyAnswersFragment.feedItems.set(index1, feedDTO);
+                                MyAnswersFragment.listAdapter.notifyDataSetChanged();
+                            }
+                        }
+
                     } else {
                         int likes = feedDTO.getLikes() +1;
                         LikeAsynTask likeAsynTask = new LikeAsynTask(this, feedDTO, likes);
@@ -323,6 +345,21 @@ public class PostDiscActivity extends ActionBarActivity implements View.OnClickL
                         feedDTO.setLikes(likes);
                         feedDTO.setLiked(true);
                         MyFeedFragment.feedItems.set(index, feedDTO);
+
+                        if(AllFeedsFragment.feedItems.contains(feedDTO)){
+                            int index1 = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                            if(index1 != -1) {
+                                AllFeedsFragment.feedItems.set(index1, feedDTO);
+                                AllFeedsFragment.listAdapter.notifyDataSetChanged();
+                            }
+                        }
+                        if(MyAnswersFragment.feedItems.contains(feedDTO)){
+                            int index1 = MyAnswersFragment.feedItems.indexOf(feedDTO);
+                            if(index1 != -1) {
+                                MyAnswersFragment.feedItems.set(index1, feedDTO);
+                                MyAnswersFragment.listAdapter.notifyDataSetChanged();
+                            }
+                        }
                     }
                 }else{
                     SnackbarManager.show(Snackbar.with(getApplicationContext())

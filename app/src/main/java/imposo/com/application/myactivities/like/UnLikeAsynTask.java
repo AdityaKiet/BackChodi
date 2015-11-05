@@ -1,4 +1,4 @@
-package imposo.com.application.allfeeds.like;
+package imposo.com.application.myactivities.like;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -32,6 +32,7 @@ import imposo.com.application.R;
 import imposo.com.application.allfeeds.data.FeedDTO;
 import imposo.com.application.constants.NetworkConstants;
 import imposo.com.application.dashboard.AllFeedsFragment;
+import imposo.com.application.dashboard.MyAnswersFragment;
 import imposo.com.application.dashboard.MyFeedFragment;
 import imposo.com.application.dto.SessionDTO;
 
@@ -39,7 +40,7 @@ import imposo.com.application.dto.SessionDTO;
  * Created by adityaagrawal on 04/11/15.
  */
 
-public class LikeAsynTask extends AsyncTask<Void, Void, Void> implements NetworkConstants{
+public class UnLikeAsynTask extends AsyncTask<Void, Void, Void> implements NetworkConstants{
     private Context context;
     private int  likes;
     private FeedDTO feedDTO;
@@ -48,7 +49,7 @@ public class LikeAsynTask extends AsyncTask<Void, Void, Void> implements Network
     private SessionDTO sessionDTO;
     private String result = "";
 
-    public LikeAsynTask(Context context, FeedDTO feedDTO, int likes){
+    public UnLikeAsynTask(Context context, FeedDTO feedDTO, int likes){
         this.context = context;
         this.feedDTO = feedDTO;
         this.likes = likes;
@@ -65,7 +66,7 @@ public class LikeAsynTask extends AsyncTask<Void, Void, Void> implements Network
 
         try {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(GET_NETWORK_IP + LIKE_SERVLET);
+            HttpPost httpPost = new HttpPost(GET_NETWORK_IP + UNLIKE_SERVLET);
             httpPost.setEntity(new UrlEncodedFormEntity(list));
             HttpResponse httpResponse = httpClient.execute(httpPost);
             entity = httpResponse.getEntity();
@@ -78,14 +79,21 @@ public class LikeAsynTask extends AsyncTask<Void, Void, Void> implements Network
             is.close();
             result = stringBuilder.toString();
         } catch (Exception e) {
-            LikeAsynTask.this.cancel(true);
+            UnLikeAsynTask.this.cancel(true);
             e.printStackTrace();
-            int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
-            feedDTO.setLikes(likes - 1);
-            feedDTO.setLiked(false);
-            AllFeedsFragment.feedItems.set(index, feedDTO);
+            int index = MyAnswersFragment.feedItems.indexOf(feedDTO);
+            feedDTO.setLikes(likes + 1);
+            feedDTO.setLiked(true);
+            MyAnswersFragment.feedItems.set(index, feedDTO);
 
-            if(feedDTO.getPostCreaterId() == sessionDTO.getId()){
+            if(AllFeedsFragment.feedItems.contains(feedDTO)){
+                int index1 = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                if(index1 != -1) {
+                    AllFeedsFragment.feedItems.set(index1, feedDTO);
+                    AllFeedsFragment.listAdapter.notifyDataSetChanged();
+                }
+            }
+            if(MyFeedFragment.feedItems.contains(feedDTO)){
                 int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
                 if(index1 != -1) {
                     MyFeedFragment.feedItems.set(index1, feedDTO);
@@ -104,13 +112,20 @@ public class LikeAsynTask extends AsyncTask<Void, Void, Void> implements Network
         try{
             JSONObject jsonObject = new JSONObject(result);
             if(jsonObject.getInt("success") == 0){
-                LikeAsynTask.this.cancel(true);
-                int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
-                feedDTO.setLikes(likes - 1);
-                feedDTO.setLiked(false);
-                AllFeedsFragment.feedItems.set(index, feedDTO);
+                UnLikeAsynTask.this.cancel(true);
+                int index = MyAnswersFragment.feedItems.indexOf(feedDTO);
+                feedDTO.setLikes(likes + 1);
+                feedDTO.setLiked(true);
+                MyAnswersFragment.feedItems.set(index, feedDTO);
 
-                if(feedDTO.getPostCreaterId() == sessionDTO.getId()){
+                if(AllFeedsFragment.feedItems.contains(feedDTO)){
+                    int index1 = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                    if(index1 != -1) {
+                        AllFeedsFragment.feedItems.set(index1, feedDTO);
+                        AllFeedsFragment.listAdapter.notifyDataSetChanged();
+                    }
+                }
+                if(MyFeedFragment.feedItems.contains(feedDTO)){
                     int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
                     if(index1 != -1) {
                         MyFeedFragment.feedItems.set(index1, feedDTO);
@@ -121,20 +136,26 @@ public class LikeAsynTask extends AsyncTask<Void, Void, Void> implements Network
                 Snackbar.make(((ActionBarActivity) context).getCurrentFocus(), "Some network error has occured.", Snackbar.LENGTH_SHORT).show();
             }
         }catch (Exception e){
-            LikeAsynTask.this.cancel(true);
-            int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
-            feedDTO.setLikes(likes - 1);
-            feedDTO.setLiked(false);
-            AllFeedsFragment.feedItems.set(index, feedDTO);
+            UnLikeAsynTask.this.cancel(true);
+            int index = MyAnswersFragment.feedItems.indexOf(feedDTO);
+            feedDTO.setLikes(likes + 1);
+            feedDTO.setLiked(true);
+            MyAnswersFragment.feedItems.set(index, feedDTO);
 
-            if(feedDTO.getPostCreaterId() == sessionDTO.getId()){
+            if(AllFeedsFragment.feedItems.contains(feedDTO)){
+                int index1 = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                if(index1 != -1) {
+                    AllFeedsFragment.feedItems.set(index1, feedDTO);
+                    AllFeedsFragment.listAdapter.notifyDataSetChanged();
+                }
+            }
+            if(MyFeedFragment.feedItems.contains(feedDTO)){
                 int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
                 if(index1 != -1) {
                     MyFeedFragment.feedItems.set(index1, feedDTO);
                     MyFeedFragment.listAdapter.notifyDataSetChanged();
                 }
             }
-
             SnackbarManager.show(com.nispok.snackbar.Snackbar.with(context.getApplicationContext()).text("Some network error has occured")
                     .textColor(Color.WHITE)
                     .duration(com.nispok.snackbar.Snackbar.SnackbarDuration.LENGTH_SHORT)

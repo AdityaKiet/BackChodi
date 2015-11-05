@@ -52,7 +52,7 @@ public class AllFeedsFragment extends Fragment implements View.OnClickListener, 
     private String URL_FEED = GET_NETWORK_IP + "/GetAllFeed?lastpost=POSTiD&first=FIRST&userid=ID&phonenumber=PHONENUMBER";
     private ListView listView;
     public static List<FeedDTO> feedItems;
-    private FeedListAdapter listAdapter;
+    public static FeedListAdapter listAdapter;
     private int preLast;
     private boolean isDataLoaded = false;
     private int maxId = 0;

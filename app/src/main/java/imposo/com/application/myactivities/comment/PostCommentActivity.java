@@ -1,4 +1,4 @@
-package imposo.com.application.myfeeds.comment;
+package imposo.com.application.myactivities.comment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

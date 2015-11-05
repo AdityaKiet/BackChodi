@@ -1,4 +1,4 @@
-package imposo.com.application.myfeeds.adapter;
+package imposo.com.application.myactivities.adapter;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -38,10 +38,10 @@ import imposo.com.application.dashboard.MyAnswersFragment;
 import imposo.com.application.dashboard.MyFeedFragment;
 import imposo.com.application.dto.SessionDTO;
 import imposo.com.application.global.GlobalData;
-import imposo.com.application.myfeeds.PostDiscActivity;
-import imposo.com.application.myfeeds.comment.PostCommentActivity;
-import imposo.com.application.myfeeds.like.LikeAsynTask;
-import imposo.com.application.myfeeds.like.UnLikeAsynTask;
+import imposo.com.application.myactivities.PostDiscActivity;
+import imposo.com.application.myactivities.comment.PostCommentActivity;
+import imposo.com.application.myactivities.like.LikeAsynTask;
+import imposo.com.application.myactivities.like.UnLikeAsynTask;
 import imposo.com.application.util.NetworkCheck;
 
 public class FeedListAdapter extends BaseAdapter implements NetworkConstants {
@@ -53,7 +53,7 @@ public class FeedListAdapter extends BaseAdapter implements NetworkConstants {
 
 	public FeedListAdapter(Activity activity) {
         this.activity = activity;
-        this.feedItems = MyFeedFragment.feedItems;
+        this.feedItems = MyAnswersFragment.feedItems;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         sessionDTO = new Gson().fromJson(sharedPreferences.getString("session", null), SessionDTO.class);
     }
@@ -168,10 +168,10 @@ public class FeedListAdapter extends BaseAdapter implements NetworkConstants {
                         int likes = feedDTO.getLikes() - 1;
                         UnLikeAsynTask likeAsynTask = new UnLikeAsynTask(activity, feedDTO, likes);
                         likeAsynTask.execute();
-                        int index = MyFeedFragment.feedItems.indexOf(feedDTO);
+                        int index = MyAnswersFragment.feedItems.indexOf(feedDTO);
                         feedDTO.setLikes(likes);
                         feedDTO.setLiked(false);
-                        MyFeedFragment.feedItems.set(index, feedDTO);
+                        MyAnswersFragment.feedItems.set(index, feedDTO);
                         notifyDataSetChanged();
 
                         if(AllFeedsFragment.feedItems.contains(feedDTO)){
@@ -181,24 +181,23 @@ public class FeedListAdapter extends BaseAdapter implements NetworkConstants {
                                 AllFeedsFragment.listAdapter.notifyDataSetChanged();
                             }
                         }
-                        if(MyAnswersFragment.feedItems.contains(feedDTO)){
-                            int index1 = MyAnswersFragment.feedItems.indexOf(feedDTO);
+                        if(MyFeedFragment.feedItems.contains(feedDTO)){
+                            int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
                             if(index1 != -1) {
-                                MyAnswersFragment.feedItems.set(index1, feedDTO);
-                                MyAnswersFragment.listAdapter.notifyDataSetChanged();
+                                MyFeedFragment.feedItems.set(index1, feedDTO);
+                                MyFeedFragment.listAdapter.notifyDataSetChanged();
                             }
                         }
-
 
                     } else {
                         FeedDTO feedDTO = feedItems.get(position);
                         int likes = feedDTO.getLikes() + 1;
                         LikeAsynTask likeAsynTask = new LikeAsynTask(activity, feedDTO, likes);
                         likeAsynTask.execute();
-                        int index = MyFeedFragment.feedItems.indexOf(feedDTO);
+                        int index = MyAnswersFragment.feedItems.indexOf(feedDTO);
                         feedDTO.setLikes(likes);
                         feedDTO.setLiked(true);
-                        MyFeedFragment.feedItems.set(index, feedDTO);
+                        MyAnswersFragment.feedItems.set(index, feedDTO);
                         notifyDataSetChanged();
 
                         if(AllFeedsFragment.feedItems.contains(feedDTO)){
@@ -208,11 +207,11 @@ public class FeedListAdapter extends BaseAdapter implements NetworkConstants {
                                 AllFeedsFragment.listAdapter.notifyDataSetChanged();
                             }
                         }
-                        if(MyAnswersFragment.feedItems.contains(feedDTO)){
-                            int index1 = MyAnswersFragment.feedItems.indexOf(feedDTO);
+                        if(MyFeedFragment.feedItems.contains(feedDTO)){
+                            int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
                             if(index1 != -1) {
-                                MyAnswersFragment.feedItems.set(index1, feedDTO);
-                                MyAnswersFragment.listAdapter.notifyDataSetChanged();
+                                MyFeedFragment.feedItems.set(index1, feedDTO);
+                                MyFeedFragment.listAdapter.notifyDataSetChanged();
                             }
                         }
                     }

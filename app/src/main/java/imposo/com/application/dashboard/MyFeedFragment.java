@@ -41,12 +41,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import imposo.com.application.R;
+import imposo.com.application.allfeeds.data.FeedDTO;
 import imposo.com.application.constants.NetworkConstants;
 import imposo.com.application.dashboard.account.ProfileUpdateActivity;
 import imposo.com.application.dto.SessionDTO;
 import imposo.com.application.global.GlobalData;
 import imposo.com.application.myfeeds.adapter.FeedListAdapter;
-import imposo.com.application.myfeeds.data.FeedDTO;
 import imposo.com.application.newfeed.AddNewFeed;
 
 /**
@@ -63,7 +63,7 @@ public class MyFeedFragment extends Fragment implements View.OnClickListener , N
     private String URL_FEED = GET_NETWORK_IP + "/GetMyFeed?lastpost=POSTiD&first=FIRST&userid=ID&phonenumber=PHONENUMBER";
     private ListView listView;
     public static List<FeedDTO> feedItems;
-    private FeedListAdapter listAdapter;
+    public static FeedListAdapter listAdapter;
     private int preLast;
     private boolean isDataLoaded = false;
     private int maxId = 0;

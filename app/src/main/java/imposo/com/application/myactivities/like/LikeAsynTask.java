@@ -1,4 +1,4 @@
-package imposo.com.application.allfeeds.like;
+package imposo.com.application.myactivities.like;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -32,6 +32,7 @@ import imposo.com.application.R;
 import imposo.com.application.allfeeds.data.FeedDTO;
 import imposo.com.application.constants.NetworkConstants;
 import imposo.com.application.dashboard.AllFeedsFragment;
+import imposo.com.application.dashboard.MyAnswersFragment;
 import imposo.com.application.dashboard.MyFeedFragment;
 import imposo.com.application.dto.SessionDTO;
 
@@ -80,18 +81,26 @@ public class LikeAsynTask extends AsyncTask<Void, Void, Void> implements Network
         } catch (Exception e) {
             LikeAsynTask.this.cancel(true);
             e.printStackTrace();
-            int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
+            int index = MyAnswersFragment.feedItems.indexOf(feedDTO);
             feedDTO.setLikes(likes - 1);
             feedDTO.setLiked(false);
-            AllFeedsFragment.feedItems.set(index, feedDTO);
+            MyAnswersFragment.feedItems.set(index, feedDTO);
 
-            if(feedDTO.getPostCreaterId() == sessionDTO.getId()){
+            if(AllFeedsFragment.feedItems.contains(feedDTO)){
+                int index1 = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                if(index1 != -1) {
+                    AllFeedsFragment.feedItems.set(index1, feedDTO);
+                    AllFeedsFragment.listAdapter.notifyDataSetChanged();
+                }
+            }
+            if(MyFeedFragment.feedItems.contains(feedDTO)){
                 int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
                 if(index1 != -1) {
                     MyFeedFragment.feedItems.set(index1, feedDTO);
                     MyFeedFragment.listAdapter.notifyDataSetChanged();
                 }
             }
+
             Snackbar.make(((ActionBarActivity) context).getCurrentFocus(), "Some network error has occured.", Snackbar.LENGTH_SHORT).show();
 
         }
@@ -105,12 +114,19 @@ public class LikeAsynTask extends AsyncTask<Void, Void, Void> implements Network
             JSONObject jsonObject = new JSONObject(result);
             if(jsonObject.getInt("success") == 0){
                 LikeAsynTask.this.cancel(true);
-                int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                int index = MyAnswersFragment.feedItems.indexOf(feedDTO);
                 feedDTO.setLikes(likes - 1);
                 feedDTO.setLiked(false);
-                AllFeedsFragment.feedItems.set(index, feedDTO);
+                MyAnswersFragment.feedItems.set(index, feedDTO);
 
-                if(feedDTO.getPostCreaterId() == sessionDTO.getId()){
+                if(AllFeedsFragment.feedItems.contains(feedDTO)){
+                    int index1 = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                    if(index1 != -1) {
+                        AllFeedsFragment.feedItems.set(index1, feedDTO);
+                        AllFeedsFragment.listAdapter.notifyDataSetChanged();
+                    }
+                }
+                if(MyFeedFragment.feedItems.contains(feedDTO)){
                     int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
                     if(index1 != -1) {
                         MyFeedFragment.feedItems.set(index1, feedDTO);
@@ -122,12 +138,19 @@ public class LikeAsynTask extends AsyncTask<Void, Void, Void> implements Network
             }
         }catch (Exception e){
             LikeAsynTask.this.cancel(true);
-            int index = AllFeedsFragment.feedItems.indexOf(feedDTO);
+            int index = MyFeedFragment.feedItems.indexOf(feedDTO);
             feedDTO.setLikes(likes - 1);
             feedDTO.setLiked(false);
-            AllFeedsFragment.feedItems.set(index, feedDTO);
+            MyFeedFragment.feedItems.set(index, feedDTO);
 
-            if(feedDTO.getPostCreaterId() == sessionDTO.getId()){
+            if(AllFeedsFragment.feedItems.contains(feedDTO)){
+                int index1 = AllFeedsFragment.feedItems.indexOf(feedDTO);
+                if(index1 != -1) {
+                    AllFeedsFragment.feedItems.set(index1, feedDTO);
+                    AllFeedsFragment.listAdapter.notifyDataSetChanged();
+                }
+            }
+            if(MyFeedFragment.feedItems.contains(feedDTO)){
                 int index1 = MyFeedFragment.feedItems.indexOf(feedDTO);
                 if(index1 != -1) {
                     MyFeedFragment.feedItems.set(index1, feedDTO);
